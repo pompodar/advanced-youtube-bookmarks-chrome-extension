@@ -28,7 +28,7 @@
       [currentVideo]: JSON.stringify([...currentVideoBookmarks, newBookmark].sort((a, b) => a.start - b.start))
     }, () => {
       // Open the popup after the bookmark is added
-      //chrome.runtime.sendMessage({ type: "OPEN_POPUP" });
+      chrome.runtime.sendMessage({ type: "OPEN_POPUP", value: currentVideo });
     });
   };
 
@@ -78,7 +78,7 @@
       chrome.storage.sync.set({ [currentVideo]: JSON.stringify(currentVideoBookmarks) });
 
       response(currentVideoBookmarks);
-    }
+    } 
   });
 
   newVideoLoaded();
@@ -90,3 +90,22 @@ const getTime = t => {
 
   return date.toISOString().substr(11, 8);
 };
+
+// contentScript.js
+
+// Listen for messages from background script
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "PLAY_VIDEOsic") {
+    // Start playing the video
+    const player = document.querySelector('video'); // Assuming the YouTube player is a <video> element
+    if (player) {
+      player.play();
+    }
+  } else if (message.type === "PAUSE_VIDEO") {
+    let youtubePlayer = document.getElementsByClassName('video-stream')[0];
+
+    // Pause the video
+    youtubePlayer.pause();
+
+  }
+});

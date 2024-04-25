@@ -87,18 +87,29 @@ const onPlay = async e => {
 
   const activeTab = await getActiveTabURL();
 
+  alert(activeTab.id)
+
   chrome.tabs.sendMessage(activeTab.id, {
     type: "PLAY",
     value: {"start": start, "end": end},
   });
 };
 
+const getTime = t => {
+  var date = new Date(0);
+  date.setSeconds(t);
+
+  return date.toISOString().substr(11, 8);
+};
+
 const onDelete = async e => {
   const activeTab = await getActiveTabURL();
-  const bookmarkTime = e.target.parentNode.parentNode.getAttribute("start");
+  const bookmarkTime = getTime(e.target.parentNode.parentNode.getAttribute("start"));
   const bookmarkElementToDelete = document.getElementById(
     "bookmark-" + bookmarkTime
   );
+
+  console.log(bookmarkTime);
 
   bookmarkElementToDelete.parentNode.removeChild(bookmarkElementToDelete);
 
@@ -163,6 +174,91 @@ const fetchBookmarks = async () => {
     });
   });
 };
+
+const fetchAllBookmarks = async () => {
+  const activeTab = await getActiveTabURL();
+  const queryParameters = activeTab.url.split("?")[1];
+  const urlParameters = new URLSearchParams(queryParameters);
+
+  const currentVideo = urlParameters.get("v");
+
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(null, (data) => {
+      let bookmark = null;
+      let bookmarks = [];
+      const parsedBookmarks = [];
+
+      Object.keys(data).forEach((key) => {
+        const bookmarks = JSON.parse(data[key]); // Parse the stored bookmarks
+        const parsedBookmark = {};
+        parsedBookmark[key] = bookmarks;
+        parsedBookmarks.push(parsedBookmark);
+      });
+
+// Assume parsedBookmarks array is populated as per your code
+
+// Get the container element where you want to populate the bookmarks
+const container = document.querySelector(".all-bookmarks");
+
+// Iterate over each parsed bookmark object
+parsedBookmarks.forEach((parsedBookmark) => {
+  // Get the video key and the corresponding bookmarks array
+  const videoKey = Object.keys(parsedBookmark)[0];
+  const bookmarks = parsedBookmark[videoKey];
+
+  // Create a container element for this video
+  const videoContainer = document.createElement("div");
+  videoContainer.classList.add("video-container");
+
+  // Create a heading element for the video key
+  const videoHeading = document.createElement("h2");
+  videoHeading.textContent = `Video: ${videoKey}`;
+  videoContainer.appendChild(videoHeading);
+
+  // Create a list element to display the bookmarks
+  const bookmarksList = document.createElement("ul");
+
+  // Iterate over each bookmark in the bookmarks array
+  bookmarks.forEach((bookmark) => {
+    // Create a list item element for each bookmark
+    const bookmarkItem = document.createElement("li");
+    bookmarkItem.textContent = `${bookmark.desc} - Start: ${bookmark.start}, End: ${bookmark.end}`;
+
+    // Attach a click event listener to the bookmark item
+    bookmarkItem.addEventListener("click", () => {
+      // Send a message to the background script to play the bookmark
+      chrome.runtime.sendMessage({
+        type: "PLAY_BOOKMARK",
+        videoKey: videoKey,
+        bookmark: bookmark
+      });
+
+      
+
+      
+    });
+
+    // Append the list item to the bookmarks list
+    bookmarksList.appendChild(bookmarkItem);
+  });
+
+  // Append the bookmarks list to the video container
+  videoContainer.appendChild(bookmarksList);
+
+  // Append the video container to the main container
+  container.appendChild(videoContainer);
+});
+
+
+      console.log(parsedBookmarks);
+
+      resolve(data ? parsedBookmarks : []);
+
+    });
+  });
+};
+
+fetchAllBookmarks();
 
 
 playAll.addEventListener("click", async () => {
