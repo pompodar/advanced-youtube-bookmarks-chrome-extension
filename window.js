@@ -3,9 +3,7 @@
 //   });
 
 import { getSecondsFromTime } from "./helpers/getSecondsFromTime.js";
-
 import { getUrlParameter } from "./helpers/getUrlParameter.js";
-
 import { getTime } from "./helpers/getTime.js";
 
 document.addEventListener("DOMContentLoaded", async () => {

@@ -21,13 +21,13 @@
       if (!results) return null;
       if (!results[2]) return '';
       return (decodeURIComponent(results[2].replace(/\+/g, ' ')));
-  }
+    }
   
-  const currentVideo = getUrlParameter('v');
+    const currentVideo = getUrlParameter('v');
 
     const videoTitle = document.querySelector("#title h1 .style-scope.ytd-watch-metadata").textContent;
 
-    const endTime = currentTime + 60; // 1 minute later
+    const endTime = currentTime + 60;
 
     const newBookmark = {
       start: getTime(currentTime),
@@ -41,7 +41,6 @@
     chrome.storage.sync.set({
       [currentVideo]: JSON.stringify([...currentVideoBookmarks, newBookmark].sort((a, b) => a.start - b.start))
     }, () => {
-      // Open the popup after the bookmark is added
       chrome.runtime.sendMessage({ type: "OPEN_POPUP", value: currentVideo, start: currentTime, end: endTime  });
     });
   };
@@ -105,27 +104,21 @@
 })();
 
 const getTime = t => {
-  var date = new Date(0);
+  const date = new Date(0);
   date.setSeconds(t);
 
   return date.toISOString().substr(11, 8);
 };
 
-// contentScript.js
-
-// Listen for messages from background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "PLAY_VIDEOsic") {
-    // Start playing the video
-    const player = document.querySelector('video'); // Assuming the YouTube player is a <video> element
+    const player = document.querySelector('video');
     if (player) {
       player.play();
     }
   } else if (message.type === "PAUSE_VIDEO") {
     let youtubePlayer = document.getElementsByClassName('video-stream')[0];
 
-    // Pause the video
     youtubePlayer.pause();
-
   }
 });
