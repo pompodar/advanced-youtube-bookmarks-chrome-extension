@@ -10,7 +10,6 @@ body {
 }
 
 .container {
-  width: 280px;
   color: #314d3e;
   min-height: 200px;
 }
@@ -21,7 +20,7 @@ body {
   padding-left: 24px;
   color: red;
   line-height: 19px;
-  padding-bottom: 35px;
+  padding-bottom: 20px;
   -ms-flex-negative: 0;
   flex-shrink: 0;
   font-weight: 700;
@@ -30,6 +29,7 @@ body {
   align-items: center;
   gap: 6px;
   font-size: 14px;
+  border-bottom: grey 0.5px solid;
 }
 
 .brand-logo::first-letter {
@@ -41,33 +41,24 @@ body {
   height: 24px;
 }
 
-.title {
-  font-size: 14px;
-  font-weight: bold;
-  padding: 8px;
+.controls {
+  padding-block: 18px;
+  padding-left: 24px;
+  border-bottom: .5px solid grey;
+}
+
+#playAll {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.all-bookmarks {
 }
 
 h2 {
-  font-size: 14px;
+  font-size: 16px;
   padding: 8px;
-}
-
-.textbox {
-  width: 100%;
-  font-size: 12px;
-  margin: 0;
-  padding: 0px 2px;
-}
-
-.textbox:focus {
-  outline: 0;
-  border-color: #66afe9;
-}
-
-.bookmarks {
-  margin: 5px 5px;
-  padding: 3px;
-  display: none;
 }
 
 .bookmark {
@@ -81,9 +72,6 @@ h2 {
   margin-bottom: 7px;
 }
 
-.bookmark-title {
-  padding-left: 2px;
-}
 
 .bookmark-controls img {
   margin: 0 4px;
@@ -109,7 +97,7 @@ h2 {
 }
 
 .video-container {
-  padding: 16px;
+  padding-inline: 16px;
   font-weight: 700;
 }
 
@@ -127,13 +115,7 @@ h2 {
 }
 
 .video-container li:hover {
-  transform: scale(1.1);
-}
-
-#playAll {
-  padding-left: 24px;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
+  /* transform: scale(1.1); */
+  background-color: grey;
 }
 
