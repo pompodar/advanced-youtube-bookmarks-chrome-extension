@@ -42,9 +42,8 @@ body {
 }
 
 .controls {
-  padding-block: 18px;
-  padding-left: 24px;
-  border-bottom: .5px solid grey;
+  padding-top: 18px;
+  padding-inline: 24px;
 }
 
 #playAll {
@@ -54,11 +53,7 @@ body {
 }
 
 .all-bookmarks {
-}
-
-h2 {
-  font-size: 16px;
-  padding: 8px;
+  padding-block: 16px;
 }
 
 .bookmark {
@@ -79,6 +74,7 @@ h2 {
   height: 18px;
   cursor: pointer;
 }
+
 .bookmark-controls {
   flex: auto;
   text-align: right;
@@ -97,8 +93,12 @@ h2 {
 }
 
 .video-container {
-  padding-inline: 16px;
   font-weight: 700;
+}
+
+h2 {
+  font-size: 16px;
+  padding-inline: 24px;
 }
 
 .video-container ul {
@@ -110,12 +110,15 @@ h2 {
   display: flex;
   gap: 6px;
   align-items: center;
-  padding: 8px;
   transition: all .5s;
+  padding-inline: 24px;
+  padding-block: 8px;
 }
 
 .video-container li:hover {
-  /* transform: scale(1.1); */
-  background-color: grey;
+  transform: scale(1.03);
+  /* background-color: rgb(220, 214, 214);
+  color: white;
+  border-radius: 4px; */
 }
 
