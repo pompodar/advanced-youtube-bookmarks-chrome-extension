@@ -1,7 +1,7 @@
 {
   "name": "Advanced Youtube Bookmarks",
   "version": "0.1.0",
-  "description": "Powerful Chrome extension for saving managing timestamps in YT videos",
+  "description": "Powerful Chrome extension for saving and managing timestamps in Yotube videos",
   "permissions": ["storage", "tabs"],
   "host_permissions": ["https://*.youtube.com/*"],
   "background": {
@@ -30,7 +30,7 @@
       "24": "assets/ext-icon.png",
       "32": "assets/ext-icon.png"
     },
-    "default_title": "My YT Bookmarks",
+    "default_title": "Advanced Youtube Bookmarks",
     "default_popup": "popup.html"
   },
   "manifest_version": 3

@@ -1,4 +1,5 @@
 import { getActiveTabURL } from "./utils.js";
+let bookmarksOnly = [];
 
 const getSecondsFromTime = (timeString) => {
   const timeParts = timeString.split(":");
@@ -87,8 +88,6 @@ const onPlay = async e => {
 
   const activeTab = await getActiveTabURL();
 
-  alert(activeTab.id)
-
   chrome.tabs.sendMessage(activeTab.id, {
     type: "PLAY",
     value: {"start": start, "end": end},
@@ -130,15 +129,12 @@ const setBookmarkAttributes =  (src, eventListener, controlParentElement) => {
 
 const playAll = document.querySelector("#playAll");
 
-console.log(playAll);
-
 const playBookmarksSequentially = (bookmarks) => {
   let index = 0;
 
   const playNextBookmark = async () => {
     if (index < bookmarks.length) {
       const bookmark = bookmarks[index];
-      console.log(bookmark);
       await playBookmark(bookmark);
       index++;
       setTimeout(playNextBookmark, (getSecondsFromTime(bookmark.end) - getSecondsFromTime(bookmark.start)) * 1000); // Delay equal to bookmark length in milliseconds
@@ -161,19 +157,22 @@ const playBookmark = async (bookmark) => {
   });
 };
 
-const fetchBookmarks = async () => {
-  const activeTab = await getActiveTabURL();
-  const queryParameters = activeTab.url.split("?")[1];
-  const urlParameters = new URLSearchParams(queryParameters);
+// const fetchBookmarks = async () => {
+//   const activeTab = await getActiveTabURL();
+//   const queryParameters = activeTab.url.split("?")[1];
+//   const urlParameters = new URLSearchParams(queryParameters);
 
-  const currentVideo = urlParameters.get("v");
+//   const currentVideo = urlParameters.get("v");
 
-  return new Promise((resolve) => {
-    chrome.storage.sync.get([currentVideo], (obj) => {
-      resolve(obj[currentVideo] ? JSON.parse(obj[currentVideo]) : []);
-    });
-  });
-};
+//   return new Promise((resolve) => {
+//     chrome.storage.sync.get([currentVideo], (obj) => {
+//       resolve(obj[currentVideo] ? JSON.parse(obj[currentVideo]) : []);
+//     });
+//   });
+// };
+
+const parsedBookmarks = [];
+
 
 const fetchAllBookmarks = async () => {
   const activeTab = await getActiveTabURL();
@@ -186,12 +185,16 @@ const fetchAllBookmarks = async () => {
     chrome.storage.sync.get(null, (data) => {
       let bookmark = null;
       let bookmarks = [];
-      const parsedBookmarks = [];
 
       Object.keys(data).forEach((key) => {
         const bookmarks = JSON.parse(data[key]); // Parse the stored bookmarks
         const parsedBookmark = {};
         parsedBookmark[key] = bookmarks;
+
+        for (let index = 0; index < bookmarks.length; index++) {
+          const element = bookmarks[index];
+          bookmarksOnly.push(element);
+        }
         parsedBookmarks.push(parsedBookmark);
       });
 
@@ -212,7 +215,7 @@ parsedBookmarks.forEach((parsedBookmark) => {
 
   // Create a heading element for the video key
   const videoHeading = document.createElement("h2");
-  videoHeading.textContent = `Video: ${videoKey}`;
+  videoHeading.textContent = bookmarks[0].title;
   videoContainer.appendChild(videoHeading);
 
   // Create a list element to display the bookmarks
@@ -224,6 +227,28 @@ parsedBookmarks.forEach((parsedBookmark) => {
     const bookmarkItem = document.createElement("li");
     bookmarkItem.textContent = `${bookmark.desc} - Start: ${bookmark.start}, End: ${bookmark.end}`;
 
+    const deleteButton = document.createElement("button");
+  deleteButton.textContent = "Delete";
+
+  // Attach a click event listener to the delete button
+  deleteButton.addEventListener("click", () => {
+    // Remove the bookmark from storage
+
+    chrome.storage.sync.get(videoKey, (data) => {
+      const updatedBookmarks = data[videoKey].filter(b => b.start !== getSecondsFromTime(bookmark.start));
+      chrome.storage.sync.set({ [videoKey]: updatedBookmarks });
+    });
+
+    // Remove the bookmark item from the DOM
+    bookmarkItem.remove();
+  });
+
+  // Append the delete button to the bookmark item
+  bookmarkItem.appendChild(deleteButton);
+
+  // Append the list item to the bookmarks list
+  bookmarksList.appendChild(bookmarkItem);
+
     // Attach a click event listener to the bookmark item
     bookmarkItem.addEventListener("click", () => {
       // Send a message to the background script to play the bookmark
@@ -232,10 +257,6 @@ parsedBookmarks.forEach((parsedBookmark) => {
         videoKey: videoKey,
         bookmark: bookmark
       });
-
-      
-
-      
     });
 
     // Append the list item to the bookmarks list
@@ -249,9 +270,6 @@ parsedBookmarks.forEach((parsedBookmark) => {
   container.appendChild(videoContainer);
 });
 
-
-      console.log(parsedBookmarks);
-
       resolve(data ? parsedBookmarks : []);
 
     });
@@ -262,8 +280,7 @@ fetchAllBookmarks();
 
 
 playAll.addEventListener("click", async () => {
-    const currentVideoBookmarks = await fetchBookmarks();
-    playBookmarksSequentially(currentVideoBookmarks);
+    playBookmarksSequentially(bookmarksOnly);
 })
 
 

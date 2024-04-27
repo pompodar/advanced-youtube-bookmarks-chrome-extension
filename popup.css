@@ -24,6 +24,7 @@
 .bookmarks {
   margin: 5px 5px;
   padding: 3px;
+  display: none;
 }
 
 .bookmark {
@@ -50,4 +51,10 @@
 .bookmark-controls {
   flex: auto;
   text-align: right;
+}
+
+.bookmark-btn {
+  height: 50%;
+  position: relative;
+  top: 25%;
 }

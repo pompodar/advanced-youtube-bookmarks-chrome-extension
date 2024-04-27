@@ -8,18 +8,7 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
       videoId: urlParameters.get("v"),
     });
 
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.type === "OPEN_POPUP") {
     
-        chrome.windows.create({
-          url: `window.html?currentVideo=${message.value}&activeTabId=${tabId}`,
-          type: "popup",
-          width: 400,
-          height: 300,
-          focused: true, 
-        });
-      }
-    });
 
     const getSecondsFromTime = (timeString) => {
       const timeParts = timeString.split(":");
@@ -29,6 +18,8 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
       
       return hours * 3600 + minutes * 60 + seconds;
     };
+
+    let timer;
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === "PLAY_BOOKMARK") {
@@ -45,14 +36,28 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
     
         chrome.tabs.update({ url: newUrl });       
         
+        clearTimeout(timer);
+
         // After a certain duration (e.g., 60 seconds), send message to pause the video
-    setTimeout(() => {
+    timer = setTimeout(() => {
       chrome.tabs.sendMessage(tabId, { type: "PAUSE_VIDEO" });
     }, interval * 1000); 
     
       }
     });
       
+  }
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "OPEN_POPUP") {
+
+    chrome.windows.create({
+      url: `window.html?currentVideo=${message.value}&videoStart=${message.start}&videoEnd=${message.end}`,
+      type: "popup",
+      width: 400,
+      height: 480,
+    });
   }
 });
 
