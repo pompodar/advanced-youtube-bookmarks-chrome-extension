@@ -13,9 +13,7 @@ const playBookmark = (videoKey, bookmark, tabId) => {
   const startPoint = getSecondsFromTime(bookmark.start);
   const endPoint = getSecondsFromTime(bookmark.end);
   const interval = (endPoint - startPoint) + 1;
-  // Construct the new YouTube video URL
   const newUrl = `https://www.youtube.com/watch?v=${videoKey}&t=${startPoint}s`;
-  // Update the tab with the new URL
   chrome.tabs.update({ url: newUrl });
   timer = setTimeout(() => {
     chrome.tabs.sendMessage(tabId, { type: "PAUSE_VIDEO" });
@@ -24,11 +22,9 @@ const playBookmark = (videoKey, bookmark, tabId) => {
 
 clearTimeout(timer);
 
-// Listener for tab updates
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
   clearTimeout(timer);
   if (tab.url && tab.url.includes("youtube.com/watch")) {
-    // Listener for messages from content scripts
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === "PLAY_BOOKMARK") {
         const { videoKey, bookmark } = message;
@@ -38,7 +34,6 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
   }
 });
 
-// Listener for messages from popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "OPEN_POPUP") {
     chrome.windows.create({
