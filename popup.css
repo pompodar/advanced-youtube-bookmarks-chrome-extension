@@ -92,6 +92,10 @@ body {
   cursor: pointer;
 }
 
+.play-button {
+  margin-left: auto;
+}
+
 .video-container {
   font-weight: 700;
 }
@@ -115,10 +119,15 @@ h2 {
   padding-block: 8px;
 }
 
+.video-container li.active {
+  background-color: #ffdf80;
+}
+
 .video-container li:hover {
-  transform: scale(1.03);
-  /* background-color: rgb(220, 214, 214);
+  /* transform: scale(1.03); */
+  /* background-color: rgb(220, 214, 214); */
+  /* background-color: #15c39a; */
+  background-color: #fae7b1;
   color: white;
-  border-radius: 4px; */
 }
 

@@ -1,4 +1,7 @@
 import { getActiveTabURL } from "./utils.js";
+
+import { getSecondsFromTime } from "./helpers/getSecondsFromTime.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
 
 let bookmarksOnly = [];
@@ -6,16 +9,6 @@ let bookmarksOnly = [];
 // chrome.storage.sync.clear(() => {
 //    console.log('Storage cleared successfully.');
 // });
-
-
-const getSecondsFromTime = (timeString) => {
-  const timeParts = timeString.split(":");
-  const hours = parseInt(timeParts[0]);
-  const minutes = parseInt(timeParts[1]);
-  const seconds = parseInt(timeParts[2]);
-  
-  return hours * 3600 + minutes * 60 + seconds;
-};
 
 
 const getTime = t => {
@@ -71,8 +64,6 @@ const fetchAllBookmarks = async () => {
       let bookmark = null;
       let bookmarks = [];
 
-      console.log(data);
-
       Object.keys(data).forEach((key) => {
         const bookmarks = JSON.parse(data[key]); // Parse the stored bookmarks
         const parsedBookmark = {};
@@ -95,7 +86,7 @@ parsedBookmarks.forEach((parsedBookmark) => {
   const bookmarks = parsedBookmark[videoKey];
 
   if (bookmarks.length < 1) return false;
-  
+
   // Create a container element for this video
   const videoContainer = document.createElement("div");
   videoContainer.classList.add("video-container");
@@ -113,6 +104,8 @@ parsedBookmarks.forEach((parsedBookmark) => {
     // Create a list item element for each bookmark
     const bookmarkItem = document.createElement("li");
     bookmarkItem.textContent = `${bookmark.desc}`;
+    bookmarkItem.className = "bookmarkItem";
+
 
     //  - ${bookmark.start} - ${bookmark.end}
 
@@ -153,6 +146,14 @@ parsedBookmarks.forEach((parsedBookmark) => {
     // Attach a click event listener to the bookmark item
     playButton.addEventListener("click", () => {
       // Send a message to the background script to play the bookmark
+      
+      for (let index = 0; index < document.querySelectorAll(".boolmarkItem").length; index++) {
+        console.log(1);
+        const element = document.querySelectorAll(".boolmarkItem")[index];
+        element.classList.remove("active");      
+      }
+
+      bookmarkItem.classList.add("active");
       chrome.runtime.sendMessage({
         type: "PLAY_BOOKMARK",
         videoKey: videoKey,
