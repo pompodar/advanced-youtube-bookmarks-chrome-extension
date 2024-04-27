@@ -1,11 +1,54 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 348px;
+  font-style: normal;
+    font-weight: 400;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Helvetica Neue, sans-serif, Arial;
+    color: #1f243c;
+}
+
 .container {
   width: 280px;
   color: #314d3e;
+  min-height: 200px;
+}
+
+.brand-logo {
+  height: 46px;
+  padding-top: 20px;
+  padding-left: 24px;
+  color: red;
+  line-height: 19px;
+  padding-bottom: 35px;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  font-weight: 700;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.brand-logo::first-letter {
+  font-size: 20px;
+}
+
+.brand-logo__image {
+  width: 24px;
+  height: 24px;
 }
 
 .title {
   font-size: 14px;
   font-weight: bold;
+  padding: 8px;
+}
+
+h2 {
+  font-size: 14px;
   padding: 8px;
 }
 
@@ -58,3 +101,39 @@
   position: relative;
   top: 25%;
 }
+
+.delete-button, .play-button {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.video-container {
+  padding: 16px;
+  font-weight: 700;
+}
+
+.video-container ul {
+  padding: 0;
+  margin: 0;
+}
+
+.video-container li {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 8px;
+  transition: all .5s;
+}
+
+.video-container li:hover {
+  transform: scale(1.1);
+}
+
+#playAll {
+  padding-left: 24px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+

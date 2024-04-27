@@ -1,7 +1,7 @@
 body {
   margin: 0;
   background-color: black;
-  /* background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%); */
+  color: white;
 }
 
 img {
@@ -16,10 +16,10 @@ img {
 }
 
 h1 {
+  color: white;
   font-size: 12px;
   z-index: 2;
   position: relative;
-  color: white;
   width: 90%;
   margin-inline: 5%;
   top: -17vw;
@@ -69,9 +69,6 @@ h1:first-letter {
   width: 90%;
   padding: 6px;
   border-radius: 8px;
-  color: white;
-  background: purple;
-  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
   font-weight: 700;
   font-size: 13px;
   border: none;
