@@ -1,5 +1,6 @@
 import { getActiveTabURL } from "./utils.js";
 import { getSecondsFromTime } from "./helpers/getSecondsFromTime.js";
+import { removeEmojis } from "./helpers/removeEmojis.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     let bookmarksOnly = [];
@@ -55,12 +56,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const videoContainer = document.createElement("div");
                     videoContainer.classList.add("video-container");
                     const videoHeading = document.createElement("h2");
-                    videoHeading.textContent = bookmarks[0].title;
-                    videoContainer.appendChild(videoHeading);
+                    const title = removeEmojis(bookmarks[0].title);
+                    
+                    videoHeading.textContent = title.length > 30 ? `${title.substring(0, 30)}...` : title;
+
+                    //videoContainer.appendChild(videoHeading);
                     const bookmarksList = document.createElement("ul");
                     bookmarks.forEach((bookmark) => {
                         const bookmarkItem = document.createElement("li");
-                        bookmarkItem.textContent = `${bookmark.desc}`;
+                        bookmarkItem.textContent = bookmark.desc.length > 30 ? `${bookmark.desc.substring(0, 30)}...` : bookmark.desc;
                         bookmarkItem.className = "bookmarkItem";
                         const deleteButton = document.createElement("img");
                         deleteButton.src = "assets/delete.png";
@@ -78,6 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         bookmarkItem.appendChild(playButton);
                         bookmarkItem.appendChild(deleteButton);
                         playButton.addEventListener("click", () => {
+                          alert(1)
                             for (let index = 0; index < document.querySelectorAll(".bookmarkItem").length; index++) {
                                 const element = document.querySelectorAll(".bookmarkItem")[index];
                                 element.classList.remove("active");

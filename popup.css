@@ -102,8 +102,12 @@ body {
 }
 
 h2 {
-  font-size: 16px;
+  font-size: 10px;
   padding-inline: 24px;
+  font-style: italic;
+  margin-left: -8px;
+  color: black !important;
+  border-top: 0.3px solid black;
 }
 
 .video-container ul {
@@ -122,6 +126,7 @@ h2 {
 
 .video-container li.active {
   background-color: #ffdf80;
+  color: white;
 }
 
 .video-container li:hover {
