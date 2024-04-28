@@ -1,9 +1,17 @@
 (() => {
   let youtubeLeftControls, youtubePlayer;
-  let currentVideo = "";
   let currentVideoBookmarks = [];
 
-  const fetchBookmarks = () => {
+  function getUrlParameter(name) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    const results = regex.exec(window.location.href);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return (decodeURIComponent(results[2].replace(/\+/g, ' ')));
+  }
+
+  const fetchBookmarks = (currentVideo) => {
     return new Promise((resolve) => {
       chrome.storage.sync.get([currentVideo], (obj) => {
         resolve(obj[currentVideo] ? JSON.parse(obj[currentVideo]) : []);
@@ -13,15 +21,6 @@
 
   const addNewBookmarkEventHandler = async () => {
     const currentTime = youtubePlayer.currentTime;
-
-    function getUrlParameter(name) {
-      name = name.replace(/[\[\]]/g, '\\$&');
-      const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-      const results = regex.exec(window.location.href);
-      if (!results) return null;
-      if (!results[2]) return '';
-      return (decodeURIComponent(results[2].replace(/\+/g, ' ')));
-    }
   
     const currentVideo = getUrlParameter('v');
 
@@ -36,7 +35,9 @@
       title: videoTitle,
     };
 
-    currentVideoBookmarks = await fetchBookmarks();
+    currentVideoBookmarks = await fetchBookmarks(currentVideo);
+
+    console.log(currentVideoBookmarks);
 
     chrome.storage.sync.set({
       [currentVideo]: JSON.stringify([...currentVideoBookmarks, newBookmark].sort((a, b) => a.start - b.start))
@@ -48,7 +49,9 @@
   const newVideoLoaded = async () => {
     const bookmarkBtnExists = document.getElementsByClassName("bookmark-btn")[0];
 
-    currentVideoBookmarks = await fetchBookmarks();
+    const currentVideo = getUrlParameter('v');
+
+    currentVideoBookmarks = await fetchBookmarks(currentVideo);
 
     if (!bookmarkBtnExists) {
       const bookmarkBtn = document.createElement("img");
@@ -59,7 +62,6 @@
       bookmarkBtn.style.width = "24px";
       bookmarkBtn.style.position = "relative";
       bookmarkBtn.style.top = "24%";
-
 
       bookmarkBtn.title = "Click to bookmark current timestamp";
 
