@@ -119,12 +119,9 @@
       setTimeout(() => {
         let youtubePlayer = document.getElementsByClassName('video-stream')[0];
 
-        // Pause the video
         youtubePlayer.pause();
-      }, 10000);
+      }, value * 1000);
     } else if (type === "PLAY_BOOKMARK") {
-      console.log(sender)
-
       const playBookmark = (videoKey, bookmark) => {
         console.log(`Playing bookmark for video ${videoKey}: ${bookmark.desc}`);
         const startPoint = getSecondsFromTime(bookmark.start);
@@ -132,7 +129,7 @@
         const interval = (endPoint - startPoint) + 1;
         const newUrl = `https://www.youtube.com/watch?v=${videoKey}&t=${startPoint}s`;
 
-        chrome.runtime.sendMessage({ type: "CHANGE_URL", url: newUrl });
+        chrome.runtime.sendMessage({ type: "CHANGE_URL", url: newUrl, interval: interval });
       };
     
       playBookmark(value.videoKey, value.bookmark);
