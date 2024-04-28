@@ -15,12 +15,13 @@ const playBookmark = (videoKey, bookmark, tabId) => {
   const interval = (endPoint - startPoint) + 1;
   const newUrl = `https://www.youtube.com/watch?v=${videoKey}&t=${startPoint}s`;
   chrome.tabs.update({ url: newUrl });
+
+  clearTimeout(timer);
+
   timer = setTimeout(() => {
     chrome.tabs.sendMessage(tabId, { type: "PAUSE_VIDEO" });
   }, interval * 1000);
 };
-
-clearTimeout(timer);
 
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
   clearTimeout(timer);
