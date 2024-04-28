@@ -91,6 +91,7 @@ body {
   width: 24px;
   height: 24px;
   cursor: pointer;
+  display: none;
 }
 
 .play-button {
@@ -135,5 +136,9 @@ h2 {
   /* background-color: #15c39a; */
   background-color: #fae7b1;
   color: white;
+}
+
+.video-container li:hover .delete-button, .video-container li:hover .play-button {
+  display: block;
 }
 

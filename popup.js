@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const bookmarksList = document.createElement("ul");
                     bookmarks.forEach((bookmark) => {
                         const bookmarkItem = document.createElement("li");
-                        bookmarkItem.textContent = bookmark.desc.length > 30 ? `${bookmark.desc.substring(0, 30)}...` : bookmark.desc;
+                        bookmarkItem.textContent = bookmark.desc.length > 45 ? `${bookmark.desc.substring(0, 45)}...` : bookmark.desc;
                         bookmarkItem.className = "bookmarkItem";
                         const deleteButton = document.createElement("img");
                         deleteButton.src = "assets/delete.png";
@@ -82,7 +82,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                         bookmarkItem.appendChild(playButton);
                         bookmarkItem.appendChild(deleteButton);
                         playButton.addEventListener("click", () => {
-                          alert(1)
                             for (let index = 0; index < document.querySelectorAll(".bookmarkItem").length; index++) {
                                 const element = document.querySelectorAll(".bookmarkItem")[index];
                                 element.classList.remove("active");

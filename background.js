@@ -24,15 +24,16 @@ const playBookmark = (videoKey, bookmark, tabId) => {
 };
 
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
-  clearTimeout(timer);
-  if (tab.url && tab.url.includes("youtube.com/watch")) {
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.type === "PLAY_BOOKMARK") {
-        const { videoKey, bookmark } = message;
-        playBookmark(videoKey, bookmark, tabId);
-      }
-    });
-  }
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    clearTimeout(timer);
+    console.log(sender);
+    console.log(tabId);
+    if (message.type === "PLAY_BOOKMARK") {
+      const { videoKey, bookmark } = message;
+      playBookmark(videoKey, bookmark, tabId);
+    }
+    console.log("works");
+  });
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
