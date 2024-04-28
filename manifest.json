@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Powerful Chrome extension for saving and managing timestamps in Yotube videos",
   "permissions": ["storage", "tabs"],
-  "host_permissions": ["https://*.youtube.com/*"],
+  "host_permissions": [],
   "background": {
     "service_worker": "background.js"
   },

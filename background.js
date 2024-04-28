@@ -1,40 +1,4 @@
-let timer;
-
-const getSecondsFromTime = (timeString) => {
-  const timeParts = timeString.split(":");
-  const hours = parseInt(timeParts[0]);
-  const minutes = parseInt(timeParts[1]);
-  const seconds = parseInt(timeParts[2]);
-  return hours * 3600 + minutes * 60 + seconds;
-};
-
-const playBookmark = (videoKey, bookmark, tabId) => {
-  console.log(`Playing bookmark for video ${videoKey}: ${bookmark.desc}`);
-  const startPoint = getSecondsFromTime(bookmark.start);
-  const endPoint = getSecondsFromTime(bookmark.end);
-  const interval = (endPoint - startPoint) + 1;
-  const newUrl = `https://www.youtube.com/watch?v=${videoKey}&t=${startPoint}s`;
-  chrome.tabs.update({ url: newUrl });
-
-  clearTimeout(timer);
-
-  timer = setTimeout(() => {
-    chrome.tabs.sendMessage(tabId, { type: "PAUSE_VIDEO" });
-  }, interval * 1000);
-};
-
-chrome.tabs.onUpdated.addListener((tabId, tab) => {
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    clearTimeout(timer);
-    console.log(sender);
-    console.log(tabId);
-    if (message.type === "PLAY_BOOKMARK") {
-      const { videoKey, bookmark } = message;
-      playBookmark(videoKey, bookmark, tabId);
-    }
-    console.log("works");
-  });
-});
+let pauseExpected = false;
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "OPEN_POPUP") {
@@ -44,5 +8,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       width: 400,
       height: 480,
     });
+  } else if (message.type === "CHANGE_URL") {
+    pauseExpected = true;
+    chrome.tabs.update({ url: message.url });
+
+    chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
+      if (changeInfo.status === 'complete' && pauseExpected) {
+        pauseExpected = false;
+        chrome.tabs.sendMessage(tabId, { type: "PAUSE_VIDEO" });
+      }
+    });
   }
 });
+

@@ -69,6 +69,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                         const deleteButton = document.createElement("img");
                         deleteButton.src = "assets/delete.png";
                         deleteButton.className = "delete-button";
+
+                        // deleteButton = document.createElement("div");
+                        // deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+                        
                         const playButton = document.createElement("img");
                         playButton.src = "assets/play.png";
                         playButton.className = "play-button";
@@ -87,10 +91,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 element.classList.remove("active");
                             }
                             bookmarkItem.classList.add("active");
-                            chrome.runtime.sendMessage({
+                            // chrome.runtime.sendMessage({
+                            chrome.tabs.sendMessage(activeTab.id, {
                                 type: "PLAY_BOOKMARK",
-                                videoKey: videoKey,
-                                bookmark: bookmark
+                                value: {videoKey: videoKey, bookmark: bookmark},
+                                // videoKey: videoKey,
+                                // bookmark: bookmark
                             });
                         });
                         bookmarksList.appendChild(bookmarkItem);

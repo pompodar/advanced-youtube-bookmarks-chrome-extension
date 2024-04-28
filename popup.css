@@ -8,6 +8,7 @@ body {
   font-weight: 400;
   font-style: normal;
   color: #1f243c;
+  background-color: rgb(232, 229, 229);
 }
 
 .container {
@@ -19,22 +20,21 @@ body {
   height: 46px;
   padding-top: 20px;
   padding-left: 24px;
-  color: red;
+  color: rgb(200, 7, 7);
   line-height: 19px;
   padding-bottom: 20px;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  font-weight: 700;
   font-style: italic;
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 14px;
+  font-size: 18px;
   border-bottom: grey 0.5px solid;
-}
-
-.brand-logo::first-letter {
-  font-size: 20px;
+  background-image: url("./assets/logo3.png");
+  background-size: cover;
+  background-position: center;
+  font-family: "Dancing Script", cursive;font-weight: 900;
 }
 
 .brand-logo__image {
