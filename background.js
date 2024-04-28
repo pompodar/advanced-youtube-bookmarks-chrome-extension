@@ -1,5 +1,3 @@
-let pauseExpected = false;
-
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === "OPEN_POPUP") {
@@ -10,20 +8,12 @@ chrome.tabs.onUpdated.addListener((tabId, tab) => {
         height: 480,
       });
     } else if (message.type === "CHANGE_URL") {
-      pauseExpected = true;
-
       setTimeout(() => {
         console.log("yes");
         chrome.tabs.sendMessage(tabId, { type: "PAUSE_VIDEO", value: message.interval });
       }, 2000);
 
       chrome.tabs.update({ url: message.url });
-
-      // chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
-      //   if (changeInfo.status === 'complete') {
-      //     chrome.tabs.sendMessage(tabId, { type: "PAUSE_VIDEO", value: message.interval });
-      //   }
-      // });
     }
   });
 });
